@@ -1,0 +1,33 @@
+[{
+  "_id": {
+    "$oid": "65d20577642575f0c8886f4a"
+  },
+  "name": "Логотип партнёра 3",
+  "content": {
+    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
+    "desc": "https://www.admbal.ru"
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65d66d8abf41b178bf648706"
+  },
+  "name": "Логотип партнёра 2",
+  "content": {
+    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
+    "desc": "https://www.admbal.ru"
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65d66d8fbf41b178bf648707"
+  },
+  "name": "Логотип партнёра 1",
+  "content": {
+    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
+    "desc": "https://www.admbal.ru"
+  },
+  "contentType": "image"
+}]

@@ -1,0 +1,11 @@
+[{
+  "_id": {
+    "$oid": "65ccf1a909750695aa5f10d5"
+  },
+  "name": "Видеоурок",
+  "content": {
+    "content": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+    "desc": "Рикролл"
+  },
+  "contentType": "video"
+}]
