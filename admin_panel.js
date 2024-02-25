@@ -139,6 +139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     });
                     
                     formDataObject['contentType'] = record.contentType;
+                    formDataObject['oldName'] = recordName;
 
                     // Отправляем запрос на сервер
                     sendRequest(collectionName, formDataObject, 'update');

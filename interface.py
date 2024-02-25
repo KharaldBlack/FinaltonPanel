@@ -33,16 +33,22 @@ def get_data_from_database():
     return data
 
 def delete_record(collection, arguments):
-    result = collection.delete_one({"name": arguments})
+    result = collection.delete_one(arguments)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Record not found")
 
 def update_record(collection, arguments):
-    return 1
+    oldName = {"name": arguments.pop("oldName", None)}
+    update = {"$set": reformat_data(arguments)}
+    result = collection.update_one(oldName, update)
+    if result.modified_count == 0:
+        raise HTTPException(status_code=404, detail="Record not found")
 
 def insert_record(collection, arguments):
     record = reformat_data(arguments)
-    collection.insert_one(record)
+    result = collection.insert_one(record)
+    if result.inserted_count == 0:
+        raise HTTPException(status_code=404, detail="Record not inserted")
 
 def reformat_data(data):
     new_data = {"name": data["name"]}
@@ -51,7 +57,7 @@ def reformat_data(data):
     return new_data
 
 @app.get("/elements")
-async def read_root():
+def read_root():
     data = get_data_from_database()
     return data
 
@@ -61,12 +67,12 @@ class Action(BaseModel):
     command: str
 
 @app.post("/action/")
-async def perform_action(action: Action):
+def perform_action(action: Action):
     collection = db[action.collectionName]
     if action.command == "delete":
         delete_record(collection, action.arguments)
     if action.command == "update":
-        print(action.arguments)
+        update_record(collection, action.arguments)
     if action.command == "add":
         insert_record(collection, action.arguments)
     else:
