@@ -33,18 +33,32 @@ document.addEventListener('DOMContentLoaded', function() {
                 const listContainer = document.getElementById('list-container');
                 const list = document.getElementById('list');
                 list.innerHTML = '';
+            
                 if (data[selectedOption]) {
                     data[selectedOption].forEach(item => {
                         const listItem = document.createElement('li');
-                        listItem.textContent = item.name;
-
+                        listItem.classList.add('list-item');
+            
+                        // Создаем столбец для имени записи
+                        const nameColumn = document.createElement('div');
+                        nameColumn.textContent = item.name;
+                        nameColumn.classList.add('column1');
+                        listItem.appendChild(nameColumn);
+            
+                        // Создаем столбец для кнопки "Изменить"
+                        const editButtonColumn = document.createElement('div');
+                        editButtonColumn.classList.add('column2');
                         const editButton = document.createElement('button');
                         editButton.textContent = 'Изменить';
                         editButton.addEventListener('click', function() {
                             openModalForEdit(selectedOption, item.name);
                         });
-                        listItem.appendChild(editButton);
-
+                        editButtonColumn.appendChild(editButton);
+                        listItem.appendChild(editButtonColumn);
+            
+                        // Создаем столбец для кнопки "Удалить"
+                        const deleteButtonColumn = document.createElement('div');
+                        deleteButtonColumn.classList.add('column2');
                         const deleteButton = document.createElement('button');
                         deleteButton.textContent = 'Удалить';
                         deleteButton.addEventListener('click', function () {
@@ -52,28 +66,30 @@ document.addEventListener('DOMContentLoaded', function() {
                             arguments['name'] = item.name;
                             sendRequest(selectedOption, arguments, 'delete');
                         });
-                        listItem.appendChild(deleteButton);
-
+                        deleteButtonColumn.appendChild(deleteButton);
+                        listItem.appendChild(deleteButtonColumn);
+            
                         list.appendChild(listItem);
                     });
-                    
+            
                     const addButton = document.createElement('button');
                     addButton.textContent = 'Добавить';
                     addButton.addEventListener('click', function() {
                         openModalForAdd(selectedOption);
                     });
                     list.appendChild(addButton);
-
+            
                     listContainer.style.display = 'block';
                 } else {
                     listContainer.style.display = 'none';
                 }
             }
+            
 
             Object.keys(data).forEach(key => {
                 const option = document.createElement('option');
                 option.value = key;
-                option.textContent = key;
+                option.textContent = vocab[key];
                 selector.appendChild(option);
             });
 
@@ -97,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const recordNameGroup = document.createElement('div');
                 recordNameGroup.classList.add('form-group');
                 const recordNameLabel = document.createElement('label');
-                recordNameLabel.textContent = 'name';
+                recordNameLabel.textContent = 'name:';
                 const recordNameInput = document.createElement('input');
                 recordNameInput.type = 'text';
                 recordNameInput.name = 'name';
@@ -162,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Создание формы для добавления новой записи
                 const form = document.createElement('form');
                 const nameLabel = document.createElement('label');
-                nameLabel.textContent = 'Имя:';
+                nameLabel.textContent = 'name:';
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
                 nameInput.name = 'name';
@@ -236,5 +252,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         function closeModal(modal) {
             modal.remove();
-        }
+    }
+    
+    vocab = {
+        contactsHead: "Контакты",
+        currentStage: "Текущий статус",
+        lessonVideo: "Видеоуроки",
+        partnerLogos: "Логотипы партнёров"
+    }
 });

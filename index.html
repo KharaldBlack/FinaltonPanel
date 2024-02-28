@@ -17,7 +17,28 @@
                 list-style-type: none;
                 padding: 0;
             }
-            /* CSS для модальных окон */
+
+            .column1 {
+                display: inline-block;
+                width: calc(
+                    40%
+                );
+                margin-right: 5px;
+            }
+
+            .column2 {
+                display: inline-block;
+                width: calc(
+                    10%
+                );
+                margin-right: 5px;
+            }
+
+            .list-item {
+                display: flex; /* Используем flexbox для правильного выравнивания элементов внутри списка */
+                margin-bottom: 5px; /* Отступ между элементами списка */
+            }
+
             .modal {
                 display: none; /* По умолчанию скрыто */
                 position: fixed; /* Фиксированное положение на экране */
