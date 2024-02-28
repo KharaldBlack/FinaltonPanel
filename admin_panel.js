@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const recordNameGroup = document.createElement('div');
                 recordNameGroup.classList.add('form-group');
                 const recordNameLabel = document.createElement('label');
-                recordNameLabel.textContent = 'name:';
+                recordNameLabel.textContent = vocab["name"];
                 const recordNameInput = document.createElement('input');
                 recordNameInput.type = 'text';
                 recordNameInput.name = 'name';
@@ -128,7 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const group = document.createElement('div');
                         group.classList.add('form-group');
                         const label = document.createElement('label');
-                        label.textContent = `${key}:`;
+                        label.textContent = vocab[key];
                 
                         const input = document.createElement('input');
                         input.type = 'text';
@@ -178,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Создание формы для добавления новой записи
                 const form = document.createElement('form');
                 const nameLabel = document.createElement('label');
-                nameLabel.textContent = 'name:';
+                nameLabel.textContent = vocab["name"] + ":";
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
                 nameInput.name = 'name';
@@ -190,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         const group = document.createElement('div');
                         group.classList.add('form-group');
                         const label = document.createElement('label');
-                        label.textContent = `${key}:`;
+                        label.textContent = vocab[key];
             
                         const input = document.createElement('input');
                         input.type = 'text';
@@ -258,6 +258,12 @@ document.addEventListener('DOMContentLoaded', function() {
         contactsHead: "Контакты",
         currentStage: "Текущий статус",
         lessonVideo: "Видеоуроки",
-        partnerLogos: "Логотипы партнёров"
+        partnerLogos: "Логотипы партнёров",
+        name: "Название",
+        content: "Содержимое",
+        desc: "Описание",
+        stage: "Стадия проекта",
+        address: "Адрес",
+        telephone: "Телефон"
     }
 });
