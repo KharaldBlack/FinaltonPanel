@@ -38,14 +38,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     data[selectedOption].forEach(item => {
                         const listItem = document.createElement('li');
                         listItem.classList.add('list-item');
-            
-                        // Создаем столбец для имени записи
+
                         const nameColumn = document.createElement('div');
                         nameColumn.textContent = item.name;
                         nameColumn.classList.add('column1');
                         listItem.appendChild(nameColumn);
-            
-                        // Создаем столбец для кнопки "Изменить"
+
                         const editButtonColumn = document.createElement('div');
                         editButtonColumn.classList.add('column2');
                         const editButton = document.createElement('button');
@@ -55,8 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         });
                         editButtonColumn.appendChild(editButton);
                         listItem.appendChild(editButtonColumn);
-            
-                        // Создаем столбец для кнопки "Удалить"
+
                         const deleteButtonColumn = document.createElement('div');
                         deleteButtonColumn.classList.add('column2');
                         const deleteButton = document.createElement('button');
@@ -102,14 +99,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 const modal = createModal();
                 const modalContent = modal.querySelector('.modal-content');
                 modal.style.display = 'block';
-                
-                // Получаем запись с помощью recordName
+            
                 const record = data[collectionName].find(item => item.name === recordName);
             
-                // Создание формы для редактирования
                 const form = document.createElement('form');
             
-                // Добавляем поле recordName в форму
                 const recordNameGroup = document.createElement('div');
                 recordNameGroup.classList.add('form-group');
                 const recordNameLabel = document.createElement('label');
@@ -122,32 +116,45 @@ document.addEventListener('DOMContentLoaded', function() {
                 recordNameGroup.appendChild(recordNameInput);
                 form.appendChild(recordNameGroup);
             
-                // Итерация по свойствам объекта record.content
+                let contentPreview; // Объявляем переменную contentPreview здесь
+            
                 for (const key in record.content) {
                     if (record.content.hasOwnProperty(key)) {
                         const group = document.createElement('div');
                         group.classList.add('form-group');
                         const label = document.createElement('label');
                         label.textContent = vocab[key];
-                
+            
                         const input = document.createElement('input');
                         input.type = 'text';
-                        input.name = key; // Добавление атрибута name
+                        input.name = key;
                         input.value = record.content[key];
-                
+            
                         group.appendChild(label);
                         group.appendChild(input);
+            
+                        if (key === 'content') {
+                            input.addEventListener('input', function (event) {
+                                updateContentPreview(event.target.value);
+                            });
+            
+                            const contentLabel = document.createElement('label');
+                            contentLabel.textContent = 'Предпросмотр контента';
+                            group.appendChild(contentLabel);
+                            contentPreview = document.createElement('div');
+                            contentPreview.id = 'content-preview';
+                            group.appendChild(contentPreview);
+                        }
+            
                         form.appendChild(group);
                     }
                 }
             
-                // Кнопка сохранения
                 const saveButton = document.createElement('button');
                 saveButton.textContent = 'Сохранить';
                 saveButton.addEventListener('click', function(event) {
                     event.preventDefault();
-                
-                    // Собираем данные из формы
+            
                     const formData = new FormData(form);
                     const formDataObject = {};
                     formData.forEach((value, key) => {
@@ -156,17 +163,22 @@ document.addEventListener('DOMContentLoaded', function() {
                     
                     formDataObject['contentType'] = record.contentType;
                     formDataObject['oldName'] = recordName;
-
-                    // Отправляем запрос на сервер
+            
                     sendRequest(collectionName, formDataObject, 'update');
-                
+            
                     closeModal(modal);
                 });
                 form.appendChild(saveButton);
                 
                 modalContent.appendChild(form);
                 document.body.appendChild(modal);
+            
+                const contentInput = form.querySelector('input[name="content"]');
+                if (contentInput) {
+                    updateContentPreview(contentInput.value, contentPreview);
+                }
             }
+            
             
             function openModalForAdd(collectionName) {
                 const modal = createModal();
@@ -175,10 +187,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const record = data[collectionName][0]
                 
-                // Создание формы для добавления новой записи
                 const form = document.createElement('form');
                 const nameLabel = document.createElement('label');
-                nameLabel.textContent = vocab["name"] + ":";
+                nameLabel.textContent = vocab["name"];
                 const nameInput = document.createElement('input');
                 nameInput.type = 'text';
                 nameInput.name = 'name';
@@ -196,20 +207,32 @@ document.addEventListener('DOMContentLoaded', function() {
                         input.type = 'text';
                         input.name = key;
                         input.value = ""
-            
+
                         group.appendChild(label);
                         group.appendChild(input);
+
+                        if (key === 'content') {
+                            input.addEventListener('input', function (event) {
+                                updateContentPreview(event.target.value);
+                            });
+
+                            const contentLabel = document.createElement('label');
+                            contentLabel.textContent = 'Предпросмотр контента';
+                            group.appendChild(contentLabel);
+                            const contentPreview = document.createElement('div');
+                            contentPreview.id = 'content-preview';
+                            group.appendChild(contentPreview);
+                        }
+
                         form.appendChild(group);
                     }
                 }
 
-                // Кнопка добавления
                 const addButton = document.createElement('button');
                 addButton.textContent = 'Добавить';
                 addButton.addEventListener('click', function(event) {
                     event.preventDefault();
                 
-                    // Собираем данные из формы
                     const formData = new FormData(form);
                     const formDataObject = {};
                     formData.forEach((value, key) => {
@@ -218,7 +241,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     formDataObject['contentType'] = record.contentType;
 
-                    // Отправляем запрос на сервер
                     sendRequest(collectionName, formDataObject, 'add');
                 
                     closeModal(modal);
@@ -265,5 +287,48 @@ document.addEventListener('DOMContentLoaded', function() {
         stage: "Стадия проекта",
         address: "Адрес",
         telephone: "Телефон"
+    }
+
+    function updateContentPreview(url) {
+        const contentPreview = document.getElementById('content-preview');
+        contentPreview.innerHTML = '';
+    
+        const contentType = checkContentType(url);
+    
+        if (contentType === 'video') {
+            const iframe = document.createElement('iframe');
+            iframe.src = url;
+            iframe.width = '560';
+            iframe.height = '315';
+            iframe.allowFullscreen = true;
+            contentPreview.appendChild(iframe);
+        } else if (contentType === 'image') {
+            const image = document.createElement('img');
+            image.src = url;
+            image.style.maxWidth = '70%';
+            contentPreview.appendChild(image);
+        } else {
+            clearContentPreview();
+        }
+    }
+
+    function clearContentPreview() {
+        const contentPreview = document.getElementById('content-preview');
+        contentPreview.innerHTML = '';
+    }
+
+    function checkContentType(url) {
+        const extension = url.split('.').pop().toLowerCase();
+    
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+        const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'wmv'];
+    
+        if (imageExtensions.includes(extension)) {
+            return 'image';
+        } else if (videoExtensions.includes(extension) || url.includes('youtube')) {
+            return 'video';
+        } else {
+            return 'unknown';
+        }
     }
 });
