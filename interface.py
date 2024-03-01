@@ -71,9 +71,9 @@ def perform_action(action: Action):
     collection = db[action.collectionName]
     if action.command == "delete":
         delete_record(collection, action.arguments)
-    if action.command == "update":
+    elif action.command == "update":
         update_record(collection, action.arguments)
-    if action.command == "add":
+    elif action.command == "add":
         insert_record(collection, action.arguments)
     else:
         raise HTTPException(status_code=400, detail="Unknown command")

@@ -124,28 +124,55 @@ document.addEventListener('DOMContentLoaded', function() {
                         group.classList.add('form-group');
                         const label = document.createElement('label');
                         label.textContent = vocab[key];
-            
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = key;
-                        input.value = record.content[key];
-            
                         group.appendChild(label);
-                        group.appendChild(input);
-            
-                        if (key === 'content') {
-                            input.addEventListener('input', function (event) {
-                                updateContentPreview(event.target.value);
+                        
+                        if (key === 'html') {
+                            const trixInput = document.createElement('input');
+                            trixInput.setAttribute('type', 'hidden');
+                            trixInput.setAttribute('name', key);
+                        
+                            const trixEditor = document.createElement('trix-editor');
+                            trixEditor.setAttribute('input', key);
+
+                            trixEditor.addEventListener('trix-initialize', function(event) {
+                                event.target.editor.loadHTML(record.content[key]);
                             });
-            
-                            const contentLabel = document.createElement('label');
-                            contentLabel.textContent = 'Предпросмотр контента';
-                            group.appendChild(contentLabel);
-                            contentPreview = document.createElement('div');
-                            contentPreview.id = 'content-preview';
-                            group.appendChild(contentPreview);
+                        
+                            trixEditor.addEventListener('trix-change', function(event) {
+                                const editorContent = event.target.value;
+                                trixInput.value = editorContent;
+                            });
+                        
+                            trixEditor.addEventListener('trix-editor-change', function(event) {
+                                const editorContent = event.target.editor.getDocument().toString();
+                                trixInput.value = editorContent;
+                            });
+                        
+                            trixEditor.value = record.content[key]; // Установка начального значения редактора
+                        
+                            group.appendChild(trixEditor);
+                            group.appendChild(trixInput);
+                        } else {
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.name = key;
+                            input.value = record.content[key];
+                            group.appendChild(input);
+
+                            if (key === 'content') {
+                                input.addEventListener('input', function (event) {
+                                    updateContentPreview(event.target.value);
+                                });
+                
+                                const contentLabel = document.createElement('label');
+                                contentLabel.textContent = 'Предпросмотр контента';
+                                group.appendChild(contentLabel);
+                                contentPreview = document.createElement('div');
+                                contentPreview.id = 'content-preview';
+                                group.appendChild(contentPreview);
+                            }
                         }
-            
+
                         form.appendChild(group);
                     }
                 }
@@ -158,7 +185,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     const formData = new FormData(form);
                     const formDataObject = {};
                     formData.forEach((value, key) => {
-                        formDataObject[key] = value;
+                        if (key === 'html') {
+                            const trixEditor = document.querySelector('trix-editor');
+                            const editorDocument = trixEditor.editor.element.innerHTML;
+                            console.log(editorDocument);
+                            formDataObject['html'] = editorDocument;
+                        } else {
+                            formDataObject[key] = value;
+                        }
                     });
                     
                     formDataObject['contentType'] = record.contentType;
@@ -224,6 +258,10 @@ document.addEventListener('DOMContentLoaded', function() {
                             group.appendChild(contentPreview);
                         }
 
+                        if (key === 'html') {
+
+                        }
+
                         form.appendChild(group);
                     }
                 }
@@ -275,19 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
         function closeModal(modal) {
             modal.remove();
     }
-    
-    vocab = {
-        contactsHead: "Контакты",
-        currentStage: "Текущий статус",
-        lessonVideo: "Видеоуроки",
-        partnerLogos: "Логотипы партнёров",
-        name: "Название",
-        content: "Содержимое",
-        desc: "Описание",
-        stage: "Стадия проекта",
-        address: "Адрес",
-        telephone: "Телефон"
-    }
 
     function updateContentPreview(url) {
         const contentPreview = document.getElementById('content-preview');
@@ -320,7 +345,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function checkContentType(url) {
         const extension = url.split('.').pop().toLowerCase();
     
-        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp'];
+        const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
         const videoExtensions = ['mp4', 'avi', 'mov', 'mkv', 'wmv'];
     
         if (imageExtensions.includes(extension)) {
@@ -330,5 +355,22 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             return 'unknown';
         }
+    }
+
+    vocab = {
+        contactsHead: "Контакты",
+        currentStage: "Текущий статус",
+        lessonVideo: "Видеоуроки",
+        partnerLogos: "Логотипы партнёров",
+        name: "Название",
+        content: "Медиа",
+        desc: "Описание",
+        stage: "Стадия проекта",
+        address: "Адрес",
+        telephone: "Телефон",
+        news: "Новости",
+        title: "Заголовок",
+        source: "Источник",
+        html: "Текст новости"
     }
 });
