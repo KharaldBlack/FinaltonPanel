@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 try:
-    client = pymongo.MongoClient("mongodb://127.0.0.1:27017")
+    client = pymongo.MongoClient("mongodb+srv://admin:vNebDjwfxaptOwY6@cluster0.ty9itc1.mongodb.net/")
 except pymongo.errors.ConfigurationError:
     print("An Invalid URI host error was received. Is your Atlas host name correct in your connection string?")
     sys.exit(1)
