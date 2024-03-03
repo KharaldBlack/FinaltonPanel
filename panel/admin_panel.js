@@ -151,10 +151,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                 trixInput.value = editorContent;
                             });
 
-                            trixEditor.value = record.content[key]; // Установка начального значения редактора
-
                             group.appendChild(trixEditor);
                             group.appendChild(trixInput);
+                        } else if (key === "text") {
+                            const textarea = document.createElement('textarea');
+                            textarea.name = key;
+                            textarea.value = record.content[key];
+                            group.appendChild(textarea);
                         } else {
                             const input = document.createElement('input');
                             input.type = 'text';
@@ -216,7 +219,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             }
 
-
             function openModalForAdd(collectionName) {
                 const modal = createModal();
                 const modalContent = modal.querySelector('.modal-content');
@@ -239,30 +241,56 @@ document.addEventListener('DOMContentLoaded', function () {
                         group.classList.add('form-group');
                         const label = document.createElement('label');
                         label.textContent = vocab[key];
-
-                        const input = document.createElement('input');
-                        input.type = 'text';
-                        input.name = key;
-                        input.value = ""
-
                         group.appendChild(label);
-                        group.appendChild(input);
-
-                        if (key === 'content') {
-                            input.addEventListener('input', function (event) {
-                                updateContentPreview(event.target.value);
-                            });
-
-                            const contentLabel = document.createElement('label');
-                            contentLabel.textContent = 'Предпросмотр контента';
-                            group.appendChild(contentLabel);
-                            const contentPreview = document.createElement('div');
-                            contentPreview.id = 'content-preview';
-                            group.appendChild(contentPreview);
-                        }
 
                         if (key === 'html') {
+                            const trixInput = document.createElement('input');
+                            trixInput.setAttribute('type', 'hidden');
+                            trixInput.setAttribute('name', key);
 
+                            const trixEditor = document.createElement('trix-editor');
+                            trixEditor.setAttribute('input', key);
+
+                            /*trixEditor.addEventListener('trix-initialize', function (event) {
+                                event.target.editor.loadHTML(record.content[key]);
+                            });*/
+
+                            trixEditor.addEventListener('trix-change', function (event) {
+                                const editorContent = event.target.value;
+                                trixInput.value = editorContent;
+                            });
+
+                            trixEditor.addEventListener('trix-editor-change', function (event) {
+                                const editorContent = event.target.editor.getDocument().toString();
+                                trixInput.value = editorContent;
+                            });
+
+                            group.appendChild(trixEditor);
+                            group.appendChild(trixInput);
+                        } else if (key === "text") {
+                            const textarea = document.createElement('textarea');
+                            textarea.name = key;
+                            textarea.value = "";
+                            group.appendChild(textarea);
+                        } else {
+                            const input = document.createElement('input');
+                            input.type = 'text';
+                            input.name = key;
+                            input.value = ""
+                            group.appendChild(input);
+
+                            if (key === 'content') {
+                                input.addEventListener('input', function (event) {
+                                    updateContentPreview(event.target.value);
+                                });
+
+                                const contentLabel = document.createElement('label');
+                                contentLabel.textContent = 'Предпросмотр контента';
+                                group.appendChild(contentLabel);
+                                const contentPreview = document.createElement('div');
+                                contentPreview.id = 'content-preview';
+                                group.appendChild(contentPreview);
+                            }
                         }
 
                         form.appendChild(group);
@@ -277,7 +305,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     const formData = new FormData(form);
                     const formDataObject = {};
                     formData.forEach((value, key) => {
-                        formDataObject[key] = value;
+                        if (key === 'html') {
+                            const trixEditor = document.querySelector('trix-editor');
+                            const editorDocument = trixEditor.editor.element.innerHTML;
+                            console.log(editorDocument);
+                            formDataObject['html'] = editorDocument;
+                        } else {
+                            formDataObject[key] = value;
+                        }
                     });
 
                     formDataObject['contentType'] = record.contentType;
