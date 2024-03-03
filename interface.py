@@ -5,6 +5,14 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 from typing import Dict
+import argparse
+import json
+
+def createParser ():
+    parser = argparse.ArgumentParser()
+    parser.add_argument ('path', nargs='?', default='./')
+
+    return parser
 
 app = FastAPI()
 
@@ -80,4 +88,12 @@ def perform_action(action: Action):
     return {"message": f"Action '{action.command}' performed successfully for record '{action.arguments}' in collection '{action.collectionName}'"}
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="127.0.0.1", port=8001)
+    parser = createParser()
+    namespace = parser.parse_args(sys.argv[1:])
+
+    with open(namespace.path + 'config.json') as json_file:
+        data = json.load(json_file)
+        host_value = data['host']
+        port_value = int(data['port'])
+
+    uvicorn.run(app, host=host_value, port=port_value)

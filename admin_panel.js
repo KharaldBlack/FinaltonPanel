@@ -1,5 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    fetch('http://127.0.0.1:8001/elements')
+const port = ":8001"
+
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('http://' + window.location.hostname + port + '/elements')
         .then(response => response.json())
         .then(data => {
             const selector = document.getElementById('selector');
@@ -13,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log(requestData);
             
-                fetch('http://127.0.0.1:8001/action/', {
+                fetch('http://' + window.location.hostname +  port + '/action/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -350,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         if (imageExtensions.includes(extension)) {
             return 'image';
-        } else if (videoExtensions.includes(extension) || url.includes('youtube')) {
+        } else if (videoExtensions.includes(extension) || url.includes('embed')) {
             return 'video';
         } else {
             return 'unknown';
@@ -359,9 +361,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
     vocab = {
         contactsHead: "Контакты",
-        currentStage: "Текущий статус",
+        currentStage: "Текущий стадия проекта",
         lessonVideo: "Видеоуроки",
         partnerLogos: "Логотипы партнёров",
+        events: "События",
+        stages: "Стадии олимпиады",
         name: "Название",
         content: "Медиа",
         desc: "Описание",
@@ -371,6 +375,7 @@ document.addEventListener('DOMContentLoaded', function() {
         news: "Новости",
         title: "Заголовок",
         source: "Источник",
-        html: "Текст новости"
+        html: "Текст новости",
+        text: "Текст"
     }
 });
