@@ -55,7 +55,7 @@ def update_record(collection, arguments):
 def insert_record(collection, arguments):
     record = reformat_data(arguments)
     result = collection.insert_one(record)
-    if result.inserted_count == 0:
+    if not result.acknowledged:
         raise HTTPException(status_code=404, detail="Record not inserted")
 
 def reformat_data(data):
