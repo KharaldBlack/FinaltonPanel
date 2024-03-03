@@ -2,10 +2,12 @@
   "_id": {
     "$oid": "65d795e7bf41b178bf64871f"
   },
-  "name": "Контакты 1 (в хедере)",
+  "name": "Контакты в хедере",
   "content": {
-    "adress": "Ул. кукушкина д. колотушкина",
-    "telephone": "79778717270"
+    "telephone": "+7 (495) 369-04-02 доб.5",
+    "address": "Ул. кукушкина д. колотушкина",
+    "email": "olimpiada@ifru.ru",
+    "postIndex": "107018 Москва"
   },
   "contentType": "text"
 }]

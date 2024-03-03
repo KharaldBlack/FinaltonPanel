@@ -1,22 +1,11 @@
 [{
   "_id": {
-    "$oid": "65d20577642575f0c8886f4a"
-  },
-  "name": "Логотип партнёра 3",
-  "content": {
-    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
-    "desc": "https://www.admbal.ru"
-  },
-  "contentType": "image"
-},
-{
-  "_id": {
     "$oid": "65d66d8abf41b178bf648706"
   },
-  "name": "Логотип партнёра 2",
+  "name": "Финатлон клуб",
   "content": {
-    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
-    "desc": "https://www.admbal.ru"
+    "content": "/club.png",
+    "desc": ""
   },
   "contentType": "image"
 },
@@ -24,10 +13,65 @@
   "_id": {
     "$oid": "65d66d8fbf41b178bf648707"
   },
-  "name": "Логотип партнёра 1",
+  "name": "Финатлон для старшеклассников",
   "content": {
-    "content": "https://www.admbal.ru/upload/iblock/a59/ue2y55gbmadomqi8508623ipug13sl9p.jpeg",
-    "desc": "https://www.admbal.ru"
+    "content": "/finatlon.png",
+    "desc": ""
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65e4d48bf8fcf383dd50d57d"
+  },
+  "name": "Финатлон фонд",
+  "content": {
+    "content": "/fond.png",
+    "desc": ""
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65e4d4b1f8fcf383dd50d57e"
+  },
+  "name": "Финпотребсоюз",
+  "content": {
+    "content": "/fps.png",
+    "desc": ""
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65e4d4cef8fcf383dd50d57f"
+  },
+  "name": "ИФРУ",
+  "content": {
+    "content": "/ifru.png",
+    "desc": ""
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65e4d4dcf8fcf383dd50d580"
+  },
+  "name": "MOEX",
+  "content": {
+    "content": "/moex.png",
+    "desc": ""
+  },
+  "contentType": "image"
+},
+{
+  "_id": {
+    "$oid": "65e4d4eef8fcf383dd50d581"
+  },
+  "name": "ВСС",
+  "content": {
+    "content": "/vss.jpg",
+    "desc": ""
   },
   "contentType": "image"
 }]
