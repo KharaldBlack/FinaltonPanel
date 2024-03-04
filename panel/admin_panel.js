@@ -1,8 +1,7 @@
-const hostname = "127.0.0.1"
-const port = ":8001"
+const current_url = "http://127.0.0.1:8001"
 
 document.addEventListener('DOMContentLoaded', function () {
-    fetch('http://' + hostname + port + '/elements')
+    fetch(current_url + '/elements')
         .then(response => response.json())
         .then(data => {
             const selector = document.getElementById('selector');
@@ -16,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 console.log(requestData);
 
-                fetch('http://' + hostname + port + '/action/', {
+                fetch(current_url + '/action/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
