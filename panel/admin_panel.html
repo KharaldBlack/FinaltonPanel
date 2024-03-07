@@ -4,11 +4,16 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Админ-панель</title>
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="style.css" />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.css"
+        />
     </head>
     <body>
         <div class="container">
             <h1>Админ-панель</h1>
+            <button id="logout-btn">Выйти</button>
             <select id="selector">
                 <option value="" selected disabled hidden>
                     Выберите вариант
@@ -19,7 +24,6 @@
                 <ul id="list"></ul>
             </div>
         </div>
-        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.css">
         <script src="https://cdnjs.cloudflare.com/ajax/libs/trix/1.3.1/trix.js"></script>
         <script src="admin_panel.js"></script>
     </body>

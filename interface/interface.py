@@ -31,6 +31,17 @@ except pymongo.errors.ConfigurationError:
 
 db = client["finaltonTest"]
 
+class Action(BaseModel):
+    arguments: Dict
+    collectionName: str
+    command: str
+
+class LoginData(BaseModel):
+    username: str
+    password: str
+
+users = [{"username": "admin", "password": "vNebDjwfxaptOwY6"}]
+
 def get_data_from_database():
     data = {}
     collections = db.list_collection_names()
@@ -69,11 +80,6 @@ def read_root():
     data = get_data_from_database()
     return data
 
-class Action(BaseModel):
-    arguments: Dict
-    collectionName: str
-    command: str
-
 @app.post("/action/")
 def perform_action(action: Action):
     collection = db[action.collectionName]
@@ -86,6 +92,31 @@ def perform_action(action: Action):
     else:
         raise HTTPException(status_code=400, detail="Unknown command")
     return {"message": f"Action '{action.command}' performed successfully for record '{action.arguments}' in collection '{action.collectionName}'"}
+
+global login_status
+
+@app.post("/login/")
+async def login(login_data: LoginData):
+    global login_status
+    if login_data.username == "admin" and login_data.password == "vNebDjwfxaptOwY6":
+        login_status = True
+        return {"message": "Login successful"}
+    raise HTTPException(status_code=401, detail="Invalid username or password")
+
+@app.get("/check_login_status")
+async def check_login_status():
+    global login_status
+    if "login_status" in globals():
+        return {"login_status": login_status}
+    else:
+        return {"login_status": False}
+    
+@app.post("/logout/")
+async def logout():
+    global login_status
+    login_status = False
+    return {"message": "Logout successful"}
+
 
 if __name__ == "__main__":
     parser = createParser()

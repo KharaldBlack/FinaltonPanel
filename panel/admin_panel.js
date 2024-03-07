@@ -1,6 +1,42 @@
 const current_url = "http://127.0.0.1:8001"
 
+async function checkLoginStatus() {
+    try {
+        const response = await fetch(`${current_url}/check_login_status`);
+        const data = await response.json();
+        if (!data.login_status) {
+            window.location.replace("login.html");
+        }
+    } catch (error) {
+        console.error("Error:", error);
+    }
+}
+
+checkLoginStatus();
+
 document.addEventListener('DOMContentLoaded', function () {
+    const logoutButton = document.getElementById('logout-btn');
+
+    logoutButton.addEventListener('click', async () => {
+        try {
+            const response = await fetch(`${current_url}/logout/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                console.log("Logout successful");
+                window.location.href = 'login.html';
+            } else {
+                console.error("Logout failed");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    });
+
     fetch(current_url + '/elements')
         .then(response => response.json())
         .then(data => {
