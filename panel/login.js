@@ -1,4 +1,4 @@
-const current_url = "http://interface-admin.std-1388.ist.mospolytech.ru";
+const current_url = "http://127.0.0.1";
 
 document.getElementById("login-form").addEventListener("submit", async (event) => {
     event.preventDefault();
