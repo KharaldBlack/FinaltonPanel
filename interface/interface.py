@@ -5,14 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 from typing import Dict
-import argparse
 import json
-
-def createParser ():
-    parser = argparse.ArgumentParser()
-    parser.add_argument ('path', nargs='?', default='./')
-
-    return parser
 
 app = FastAPI()
 
@@ -119,10 +112,7 @@ async def logout():
 
 
 if __name__ == "__main__":
-    parser = createParser()
-    namespace = parser.parse_args(sys.argv[1:])
-
-    with open(namespace.path + 'config.json') as json_file:
+    with open('/home/std/interface/config.json') as json_file:
         data = json.load(json_file)
         host_value = data['host']
         port_value = int(data['port'])
