@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
             contentPreview.appendChild(iframe);
         } else if (contentType === 'image') {
             const image = document.createElement('img');
-            image.src = url;
+            image.src = '../' + url;
             image.style.maxWidth = '70%';
             contentPreview.appendChild(image);
         } else {
