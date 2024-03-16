@@ -1,4 +1,5 @@
 const current_url = "http://interface-admin.std-1388.ist.mospolytech.ru"
+const img_utl = "http://new.fin-olimp.ru"
 
 async function checkLoginStatus() {
     try {
@@ -402,7 +403,7 @@ document.addEventListener('DOMContentLoaded', function () {
             contentPreview.appendChild(iframe);
         } else if (contentType === 'image') {
             const image = document.createElement('img');
-            image.src = '../' + url;
+            image.src = img_utl + url;
             image.style.maxWidth = '70%';
             contentPreview.appendChild(image);
         } else {
