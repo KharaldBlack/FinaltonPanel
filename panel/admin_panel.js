@@ -403,8 +403,10 @@ document.addEventListener('DOMContentLoaded', function () {
             contentPreview.appendChild(iframe);
         } else if (contentType === 'image') {
             const image = document.createElement('img');
-            image.src = img_utl + url;
-            image.style.maxWidth = '70%';
+            if (url.toLowerCase().includes("http"))
+                image.src = url;
+            else image.src = img_utl + url;
+            image.style.maxWidth = '50%';
             contentPreview.appendChild(image);
         } else {
             clearContentPreview();
