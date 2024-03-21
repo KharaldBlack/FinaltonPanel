@@ -287,10 +287,6 @@ document.addEventListener('DOMContentLoaded', function () {
                             const trixEditor = document.createElement('trix-editor');
                             trixEditor.setAttribute('input', key);
 
-                            /*trixEditor.addEventListener('trix-initialize', function (event) {
-                                event.target.editor.loadHTML(record.content[key]);
-                            });*/
-
                             trixEditor.addEventListener('trix-change', function (event) {
                                 const editorContent = event.target.value;
                                 trixInput.value = editorContent;
