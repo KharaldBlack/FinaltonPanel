@@ -154,7 +154,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 recordNameGroup.appendChild(recordNameInput);
                 form.appendChild(recordNameGroup);
 
-                let contentPreview; // Объявляем переменную contentPreview здесь
+                let contentPreview;
 
                 for (const key in record.content) {
                     if (record.content.hasOwnProperty(key)) {
@@ -285,10 +285,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
                             const trixEditor = document.createElement('trix-editor');
                             trixEditor.setAttribute('input', key);
-
-                            /*trixEditor.addEventListener('trix-initialize', function (event) {
-                                event.target.editor.loadHTML(record.content[key]);
-                            });*/
 
                             trixEditor.addEventListener('trix-change', function (event) {
                                 const editorContent = event.target.value;
