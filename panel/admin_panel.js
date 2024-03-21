@@ -1,5 +1,5 @@
 const current_url = "http://interface-admin.std-1388.ist.mospolytech.ru"
-const img_utl = "http://new.fin-olimp.ru"
+const img_utl = "http://new.fin-olimp.ru/"
 
 async function checkLoginStatus() {
     try {
@@ -93,17 +93,19 @@ document.addEventListener('DOMContentLoaded', function () {
                         editButtonColumn.appendChild(editButton);
                         listItem.appendChild(editButtonColumn);
 
-                        const deleteButtonColumn = document.createElement('div');
-                        deleteButtonColumn.classList.add('column2');
-                        const deleteButton = document.createElement('button');
-                        deleteButton.textContent = 'Удалить';
-                        deleteButton.addEventListener('click', function () {
-                            let arguments = {}
-                            arguments['name'] = item.name;
-                            sendRequest(selectedOption, arguments, 'delete');
-                        });
-                        deleteButtonColumn.appendChild(deleteButton);
-                        listItem.appendChild(deleteButtonColumn);
+                        if (data[selectedOption].length > 1) {
+                            const deleteButtonColumn = document.createElement('div');
+                            deleteButtonColumn.classList.add('column2');
+                            const deleteButton = document.createElement('button');
+                            deleteButton.textContent = 'Удалить';
+                            deleteButton.addEventListener('click', function () {
+                                let arguments = {}
+                                arguments['name'] = item.name;
+                                sendRequest(selectedOption, arguments, 'delete');
+                            });
+                            deleteButtonColumn.appendChild(deleteButton);
+                            listItem.appendChild(deleteButtonColumn);
+                        }
 
                         list.appendChild(listItem);
                     });
@@ -155,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 recordNameGroup.appendChild(recordNameInput);
                 form.appendChild(recordNameGroup);
 
-                let contentPreview; // Объявляем переменную contentPreview здесь
+                let contentPreview;
 
                 for (const key in record.content) {
                     if (record.content.hasOwnProperty(key)) {
@@ -271,57 +273,64 @@ document.addEventListener('DOMContentLoaded', function () {
                 form.appendChild(nameLabel);
                 form.appendChild(nameInput);
 
-                for (const key in record.content) {
-                    if (record.content.hasOwnProperty(key)) {
-                        const group = document.createElement('div');
-                        group.classList.add('form-group');
-                        const label = document.createElement('label');
-                        label.textContent = vocab[key];
-                        group.appendChild(label);
+                if (collectionName === "uploads") {
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.name = 'file';
+                    form.appendChild(fileInput);
+                } else {
+                    for (const key in record.content) {
+                        if (record.content.hasOwnProperty(key)) {
+                            const group = document.createElement('div');
+                            group.classList.add('form-group');
+                            const label = document.createElement('label');
+                            label.textContent = vocab[key];
+                            group.appendChild(label);
 
-                        if (key === 'html') {
-                            const trixInput = document.createElement('input');
-                            trixInput.setAttribute('type', 'hidden');
-                            trixInput.setAttribute('name', key);
+                            if (key === 'html') {
+                                const trixInput = document.createElement('input');
+                                trixInput.setAttribute('type', 'hidden');
+                                trixInput.setAttribute('name', key);
 
-                            const trixEditor = document.createElement('trix-editor');
-                            trixEditor.setAttribute('input', key);
+                                const trixEditor = document.createElement('trix-editor');
+                                trixEditor.setAttribute('input', key);
 
-                            trixEditor.addEventListener('trix-change', function (event) {
-                                const editorContent = event.target.value;
-                                trixInput.value = editorContent;
-                            });
-
-                            trixEditor.addEventListener('trix-editor-change', function (event) {
-                                const editorContent = event.target.editor.getDocument().toString();
-                                trixInput.value = editorContent;
-                            });
-
-                            group.appendChild(trixEditor);
-                            group.appendChild(trixInput);
-                        } else if (key === "text") {
-                            const textarea = document.createElement('textarea');
-                            textarea.name = key;
-                            textarea.value = "";
-                            group.appendChild(textarea);
-                        } else {
-                            const input = document.createElement('input');
-                            input.type = 'text';
-                            input.name = key;
-                            input.value = ""
-                            group.appendChild(input);
-
-                            if (key === 'content') {
-                                input.addEventListener('input', function (event) {
-                                    updateContentPreview(event.target.value);
+                                trixEditor.addEventListener('trix-change', function (event) {
+                                    const editorContent = event.target.value;
+                                    trixInput.value = editorContent;
                                 });
 
-                                const contentLabel = document.createElement('label');
-                                contentLabel.textContent = 'Предпросмотр контента';
-                                group.appendChild(contentLabel);
-                                const contentPreview = document.createElement('div');
-                                contentPreview.id = 'content-preview';
-                                group.appendChild(contentPreview);
+                                trixEditor.addEventListener('trix-editor-change', function (event) {
+                                    const editorContent = event.target.editor.getDocument().toString();
+                                    trixInput.value = editorContent;
+                                });
+
+                                group.appendChild(trixEditor);
+                                group.appendChild(trixInput);
+                            } else if (key === "text") {
+                                const textarea = document.createElement('textarea');
+                                textarea.name = key;
+                                textarea.value = "";
+                                group.appendChild(textarea);
+                            } else {
+                                const input = document.createElement('input');
+                                input.type = 'text';
+                                input.name = key;
+                                input.value = ""
+                                group.appendChild(input);
+
+                                if (key === 'content') {
+                                    input.addEventListener('input', function (event) {
+                                        updateContentPreview(event.target.value);
+                                    });
+
+                                    const contentLabel = document.createElement('label');
+                                    contentLabel.textContent = 'Предпросмотр контента';
+                                    group.appendChild(contentLabel);
+                                    const contentPreview = document.createElement('div');
+                                    contentPreview.id = 'content-preview';
+                                    group.appendChild(contentPreview);
+                                }
                             }
                         }
 
@@ -342,6 +351,25 @@ document.addEventListener('DOMContentLoaded', function () {
                             const editorDocument = trixEditor.editor.element.innerHTML;
                             console.log(editorDocument);
                             formDataObject['html'] = editorDocument;
+                        } else if (key === "file") {
+                            const fileInput = form.querySelector('input[type="file"]');
+                            const file = fileInput.files[0];
+                            formDataObject["url"] = file.name;
+
+                            /*const fileFormData = new FormData();
+                            fileFormData.append('file', file);
+
+                            fetch('http://new.fin-olimp.ru/upload', {
+                                method: 'POST',
+                                body: fileFormData
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('Файл успешно загружен:', data);
+                            })
+                            .catch(error => {
+                                console.error('Ошибка загрузки файла:', error);
+                            });*/
                         } else {
                             formDataObject[key] = value;
                         }
@@ -446,6 +474,13 @@ document.addEventListener('DOMContentLoaded', function () {
         title: "Заголовок",
         source: "Источник",
         html: "Текст новости",
-        text: "Текст"
+        text: "Текст",
+        info: "Общая информация",
+        organizerLogos: "Логотипы организаторов",
+        uploads: "Загруженные файлы",
+        usualPartners: "Партнёры",
+        infoPartners: "Информационные партнёры",
+        materials: "Методические материалы",
+        url: "Ссылка на файл"
     }
 });
