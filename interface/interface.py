@@ -1,11 +1,13 @@
 import pymongo
 import sys
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 from pydantic import BaseModel
 from typing import Dict
 import json
+import os
+import shutil
 
 app = FastAPI()
 
@@ -35,6 +37,9 @@ class LoginData(BaseModel):
 
 users = [{"username": "admin", "password": "vNebDjwfxaptOwY6"}]
 
+path = "/home/std/interface/config.json"
+path_to_file = "/home/std/public"
+
 def get_data_from_database():
     data = {}
     collections = db.list_collection_names()
@@ -45,9 +50,18 @@ def get_data_from_database():
     return data
 
 def delete_record(collection, arguments):
+    if collection.name == "uploads":
+        record = collection.find_one(arguments)
+        file_name = record["content"]["url"]
+        #file_name = os.path.basename(file_url)
+        file_path = os.path.join(path_to_file, file_name)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+
     result = collection.delete_one(arguments)
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="Record not found")
+
 
 def update_record(collection, arguments):
     oldName = {"name": arguments.pop("oldName", None)}
@@ -86,6 +100,14 @@ def perform_action(action: Action):
         raise HTTPException(status_code=400, detail="Unknown command")
     return {"message": f"Action '{action.command}' performed successfully for record '{action.arguments}' in collection '{action.collectionName}'"}
 
+@app.post("/upload/")
+async def upload_file(file: UploadFile = File(...)):
+    upload_folder = path_to_file
+    file_path = os.path.join(upload_folder, file.filename)
+    with open(file_path, "wb") as f:
+        shutil.copyfileobj(file.file, f)
+    return {"filename": file.filename, "message": "File uploaded successfully"}
+
 global login_status
 
 @app.post("/login/")
@@ -112,7 +134,7 @@ async def logout():
 
 
 if __name__ == "__main__":
-    with open('/home/std/interface/config.json') as json_file:
+    with open(path) as json_file:
         data = json.load(json_file)
         host_value = data['host']
         port_value = int(data['port'])

@@ -354,12 +354,12 @@ document.addEventListener('DOMContentLoaded', function () {
                         } else if (key === "file") {
                             const fileInput = form.querySelector('input[type="file"]');
                             const file = fileInput.files[0];
-                            formDataObject["url"] = file.name;
+                            formDataObject["url"] = "http://std-1388.ist.mospolytech.ru:8002/" + file.name;
 
-                            /*const fileFormData = new FormData();
+                            const fileFormData = new FormData();
                             fileFormData.append('file', file);
 
-                            fetch('http://new.fin-olimp.ru/upload', {
+                            fetch(current_url + "/upload/", {
                                 method: 'POST',
                                 body: fileFormData
                             })
@@ -369,7 +369,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             })
                             .catch(error => {
                                 console.error('Ошибка загрузки файла:', error);
-                            });*/
+                            });
                         } else {
                             formDataObject[key] = value;
                         }
